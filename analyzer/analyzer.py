@@ -1,6 +1,7 @@
 import os
 import stat
 from datetime import datetime
+from analyzer.file_types import categorize_file
 
 def analyze_directory(path: str) -> list[dict]:
     """
@@ -27,7 +28,8 @@ def get_file_info(path: str) -> dict:
             "size": stat_info.st_size,
             "permissions": stat.filemode(stat_info.st_mode),
             "modified": datetime.fromtimestamp(stat_info.st_mtime),
-            "extension": os.path.splitext(path)[1].lower()
+            "extension": os.path.splitext(path)[1].lower(),
+            "category": categorize_file(os.path.splitext(path)[1])
         }
     except Exception as e:
         return {

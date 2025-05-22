@@ -2,6 +2,10 @@ import argparse
 import os
 import sys
 from analyzer import analyzer
+from tabulate import tabulate
+
+def truncate(text, max_length=50):
+    return text if len(text) <= max_length else "..." + text[-(max_length - 3):]
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -29,10 +33,23 @@ def main():
 
     print(f"Analyzing directory: {args.directory}")
     results = analyzer.analyze_directory(args.directory)
-
+    
     print(f"Found {len(results)} files")
-    for file in results:
-        print(f"File: {file['path']} - Size: {file['size']} bytes - Permissions: {file['permissions']} - Modified: {file['modified']} - Extension: {file['extension']}")
+    table_data = [
+        [
+            truncate(file["path"]),
+            file["size"],
+            file["permissions"],
+            file["modified"],
+            file["extension"],
+            file["category"]
+        ]
+        for file in results
+    ]
+
+    headers = ["Path", "Size (bytes)", "Permissions", "Modified", "Extension", "Category"]
+
+    print(tabulate(table_data, headers=headers, tablefmt="grid"))
         
 
 if __name__ == "__main__":
