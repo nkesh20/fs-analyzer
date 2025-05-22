@@ -1,9 +1,9 @@
 import argparse
 import os
 import sys
-import analyzer
 from tabulate import tabulate
-from utils import truncate_text
+from analyzer.utils import truncate_text
+from analyzer.analyzer import analyze_directory
 
 
 def parse_args():
@@ -51,7 +51,7 @@ def main():
         sys.exit(1)
 
     print(f"Analyzing directory: {args.directory}")
-    results = analyzer.analyze_directory(args.directory)
+    results = analyze_directory(args.directory)
 
     print(f"Found {len(results)} files")
     print_table(results)

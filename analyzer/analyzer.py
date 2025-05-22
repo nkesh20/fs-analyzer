@@ -1,7 +1,7 @@
 import os
 import stat
 from datetime import datetime
-from file_types import categorize_file
+from analyzer.file_types import categorize_file
 
 
 def analyze_directory(path: str) -> list[dict]:

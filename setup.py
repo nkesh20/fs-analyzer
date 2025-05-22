@@ -6,6 +6,6 @@ setup(
     packages=find_packages(),
     install_requires=["tabulate"],
     entry_points={
-        "console_scripts": ["fs-analyzer = analyzer.main:main"],
+        "console_scripts": ["fs-analyzer = analyzer.cli:main"],
     },
 )
