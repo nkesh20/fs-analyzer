@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+from analyzer import analyzer
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -27,7 +28,15 @@ def main():
         sys.exit(1)
 
     print(f"Analyzing directory: {args.directory}")
-    print(f"Large file threshold: {args.threshold} MB")
+    results = analyzer.analyze_directory(args.directory)
+
+    print(f"Found {len(results)} files")
+    for file in results:
+        print(f"File: {file['path']} - Size: {file['size']} bytes - Permissions: {file['permissions']} - Modified: {file['modified']} - Extension: {file['extension']}")
+        
 
 if __name__ == "__main__":
     main()
+    
+
+
