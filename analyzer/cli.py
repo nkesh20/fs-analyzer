@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 from tabulate import tabulate
-from analyzer.utils import truncate_text
+from analyzer.utils import truncate_text, size_by_category, find_large_files
 from analyzer.analyzer import analyze_directory
 
 
@@ -31,6 +31,7 @@ def print_table(results):
             file["category"],
         ]
         for file in results
+        if "error" not in file
     ]
     headers = [
         "Path",
@@ -53,8 +54,30 @@ def main():
     print(f"Analyzing directory: {args.directory}")
     results = analyze_directory(args.directory)
 
+    # print all files
     print(f"Found {len(results)} files")
     print_table(results)
+
+    # size by category
+    sizes = size_by_category(results)
+    print("\nTotal size by file category:")
+    for category, total_size in sizes.items():
+        print(f"{category}: {total_size / (1024*1024):.2f} MB")
+
+    # large files
+    large_files = find_large_files(results, args.threshold)
+    print(f"\nFiles larger than {args.threshold} MB ({len(large_files)}):")
+    for f in large_files:
+        print(f"- {f['path']} ({f['size'] / (1024*1024):.2f} MB)")
+
+    # errors
+    errors = [f for f in results if "error" in f]
+    if errors:
+        print(f"\nErrors encountered ({len(errors)} files):")
+        for e in errors:
+            print(f"- {e['path']}: {e['error']}")
+
+    # TODO File Permissions Report
 
 
 if __name__ == "__main__":
