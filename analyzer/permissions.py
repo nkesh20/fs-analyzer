@@ -1,4 +1,3 @@
-import os
 import stat
 
 
@@ -38,8 +37,7 @@ def report_unusual_permissions(files: list[dict]) -> list[dict]:
         if "error" in file:
             continue
         try:
-            mode = os.stat(file["path"]).st_mode
-            risks = get_permission_risks(mode)
+            risks = get_permission_risks(file["mode"])
             if risks:
                 # Add risk reasons to the file info
                 file_with_risks = file.copy()
