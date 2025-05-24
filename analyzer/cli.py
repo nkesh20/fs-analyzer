@@ -1,9 +1,8 @@
 import argparse
 import os
 import sys
-from tabulate import tabulate
 from analyzer.utils import (
-    truncate_text,
+    print_table,
     size_by_category,
     find_large_files,
     print_permissions_report,
@@ -34,30 +33,6 @@ def parse_args():
         help="Only report files with unusual permissions",
     )
     return parser.parse_args()
-
-
-def print_table(results):
-    table_data = [
-        [
-            truncate_text(file["path"]),
-            file["size"],
-            file["permissions"],
-            file["modified"],
-            file["extension"],
-            file["category"],
-        ]
-        for file in results
-        if "error" not in file
-    ]
-    headers = [
-        "Path",
-        "Size (bytes)",
-        "Permissions",
-        "Modified",
-        "Extension",
-        "Category",
-    ]
-    print(tabulate(table_data, headers=headers, tablefmt="grid"))
 
 
 def main():

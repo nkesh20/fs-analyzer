@@ -19,6 +19,30 @@ def find_large_files(files: list[dict], threshold_mb: int) -> list[dict]:
     return [f for f in files if f.get("size", 0) > threshold_bytes]
 
 
+def print_table(results):
+    table_data = [
+        [
+            truncate_text(file["path"]),
+            file["size"],
+            file["permissions"],
+            file["modified"],
+            file["extension"],
+            file["category"],
+        ]
+        for file in results
+        if "error" not in file
+    ]
+    headers = [
+        "Path",
+        "Size (bytes)",
+        "Permissions",
+        "Modified",
+        "Extension",
+        "Category",
+    ]
+    print(tabulate(table_data, headers=headers, tablefmt="grid"))
+
+
 def print_permissions_report(risky_files: list):
     if not risky_files:
         print("No files with unusual permissions found.")

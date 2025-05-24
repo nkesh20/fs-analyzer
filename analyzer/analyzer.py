@@ -17,7 +17,7 @@ def analyze_directory(path: str) -> list[dict]:
             files.append(info)
             count += 1
             if count % 1000 == 0:
-                print(f"Processed {count} files...", end='\r')
+                print(f"Processed {count} files...", end="\r")
     print()
     return files
 
