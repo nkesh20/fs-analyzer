@@ -5,7 +5,7 @@ try:
     import magic
 except ImportError:
     print(
-        "Error: python-magic is not installed. Please install it using 'pip install python-magic-bin'."
+        "Error: python-magic is not installed. Please install it using 'pip install python-magic'."
     )
     sys.exit(1)
 
