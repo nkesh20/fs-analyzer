@@ -64,6 +64,12 @@ pip install -r requirements.txt
 
 # Run from source
 python -m analyzer.cli .
+
+
+# Run tests
+pip install -r requirements-dev.txt
+python -m pytest tests/ # Unit tests
+python tests/test_analyzer.py # Integration test on current directory + unit tests
 ```
 
 ### Command Line Options
