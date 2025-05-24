@@ -29,7 +29,7 @@ def get_file_info(path: str) -> dict:
             "permissions": stat.filemode(stat_info.st_mode),
             "modified": datetime.fromtimestamp(stat_info.st_mtime),
             "extension": os.path.splitext(path)[1].lower(),
-            "category": categorize_file(os.path.splitext(path)[1]),
+            "category": categorize_file(path),
         }
     except Exception as e:
         return {"path": path, "error": str(e)}
