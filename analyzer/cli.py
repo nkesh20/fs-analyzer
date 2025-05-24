@@ -2,8 +2,14 @@ import argparse
 import os
 import sys
 from tabulate import tabulate
-from analyzer.utils import truncate_text, size_by_category, find_large_files
+from analyzer.utils import (
+    truncate_text,
+    size_by_category,
+    find_large_files,
+    print_permissions_report,
+)
 from analyzer.analyzer import analyze_directory
+from analyzer.permissions import report_unusual_permissions
 
 
 def parse_args():
@@ -16,6 +22,16 @@ def parse_args():
         type=int,
         default=100,  # Default size threshold in MB
         help="Size threshold in MB for large file detection (default: 100MB)",
+    )
+    parser.add_argument(
+        "--show-permissions",
+        action="store_true",
+        help="Show permissions of files",
+    )
+    parser.add_argument(
+        "--permissions-only",
+        action="store_true",
+        help="Only report files with unusual permissions",
     )
     return parser.parse_args()
 
@@ -54,6 +70,15 @@ def main():
     print(f"Analyzing directory: {args.directory}")
     results = analyze_directory(args.directory)
 
+    risky_files = []
+    if args.show_permissions or args.permissions_only:
+        risky_files = report_unusual_permissions(results)
+
+    if args.permissions_only:
+        print(f"Found {len(risky_files)} files with unusual permissions")
+        print_permissions_report(risky_files)
+        return
+
     # print all files
     print(f"Found {len(results)} files")
     print_table(results)
@@ -77,7 +102,9 @@ def main():
         for e in errors:
             print(f"- {e['path']}: {e['error']}")
 
-    # TODO File Permissions Report
+    if args.show_permissions:
+        print(f"\nFiles with unusual permissions ({len(risky_files)}):")
+        print_permissions_report(risky_files)
 
 
 if __name__ == "__main__":
