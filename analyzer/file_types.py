@@ -5,7 +5,7 @@ try:
     import magic
 except ImportError:
     print(
-        "Error: python-magic is not installed. Please install it using 'pip install python-magic'."
+        "Error: python-magic is not installed. Please install it using 'pip install python-magic-bin'."
     )
     sys.exit(1)
 
@@ -43,6 +43,13 @@ MIME_CATEGORY_MAP = {
 
 
 def categorize_file(path: str) -> str:
+    # First, try categorizing by extension
+    extension = os.path.splitext(path)[1].lower()
+    for category, extensions in EXTENSION_MAP.items():
+        if extension in extensions:
+            return category
+
+    # Fallback to magic detection if extension isn't helpful
     try:
         mime = magic.from_file(path, mime=True)
         if mime:
@@ -51,11 +58,7 @@ def categorize_file(path: str) -> str:
                 return MIME_CATEGORY_MAP[mime]
             elif main_type in MIME_CATEGORY_MAP:
                 return MIME_CATEGORY_MAP[main_type]
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"[categorize_file] magic failed for {path}: {e}")
 
-    extension = os.path.splitext(path)[1].lower()
-    for category, extensions in EXTENSION_MAP.items():
-        if extension in extensions:
-            return category
     return "Other" if extension else "Unknown"
